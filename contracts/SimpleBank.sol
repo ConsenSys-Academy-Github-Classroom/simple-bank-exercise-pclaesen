@@ -24,7 +24,9 @@ contract SimpleBank {
     event LogWithdrawal(address accountAddress, uint withdrawAmount, uint newBalance);
 
     
-    receive() external payable{}
+    function () external payable {
+        revert();
+    }
 
     /// @notice Get balance
     /// @return The balance of the user
@@ -59,7 +61,7 @@ contract SimpleBank {
       address sendToAddress = msg.sender;
       
       require (balances[msg.sender] >= withdrawAmount);
-      (bool success, ) = sendToAddress.call{value: withdrawAmount}("");
+      (bool success, ) = sendToAddress.call.value(withdrawAmount)("");
       
         if (!success) {
           revert("Withdrawal failed.");
